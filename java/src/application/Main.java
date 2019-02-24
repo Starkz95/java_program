@@ -1,5 +1,9 @@
 package application;
 	
+import java.util.concurrent.Future;
+
+import javax.lang.model.element.VariableElement;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -12,10 +16,12 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent  root = FXMLLoader.load(getClass().getResource("/application/MyScene.fxml"));
-			Scene scene = new Scene(root,400,400);
+			Parent  root = FXMLLoader.load(getClass().getResource("/application/Chatroom.fxml"));
+			Scene scene = new Scene(root,800,400);
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
