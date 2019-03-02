@@ -1,0 +1,1 @@
+java  -Dfile.encoding=utf-8 -jar client.jar localhost 8888 WangWu
