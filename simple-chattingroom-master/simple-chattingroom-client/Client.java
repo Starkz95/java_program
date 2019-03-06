@@ -33,20 +33,7 @@ import javax.swing.event.ListSelectionListener;
 
 public class Client {
 
-	private JFrame frame;
-	private JList userList;
-	private JTextArea textArea;
-	private JTextField textField;
-	private JButton btn_send;
-	private JPanel southPanel;
-	private JScrollPane rightScroll;
-	private JScrollPane leftScroll;
-	private JSplitPane centerSplit;
-	private JTabbedPane tabs;
-	private JPanel leftPanel;
-
-	private DefaultListModel listModel;
-
+	private ClientChatUI CCUI;
 	private Socket socket;
 	private PrintWriter writer;
 	private BufferedReader reader;
@@ -66,15 +53,15 @@ public class Client {
 //		} else {
 //			System.err.println("启动方式：java -jar client.jar server_ip server_port nickname");
 //		}
-		new Client("localhost", 8888, "jsi");
+		new Client("localhost", 8888, "32");
 
 	}
 
 	// 执行发送
 	public void send() {
-		String message = textField.getText().trim();
+		String message = CCUI.getTextField().getText().trim();
 		if (message == null || message.equals("")) {
-			JOptionPane.showMessageDialog(frame, "消息不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(CCUI.getFrame(), "消息不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		// sendMessage(frame.getTitle() + "@" + "ALL" + "@" + message);
@@ -84,9 +71,8 @@ public class Client {
 		} else {
 			sendMessage("Private@" + name + "@" + currentTabName + "@" + message);
 		}
-		textField.setText(null);
+		CCUI.getTextField().setText(null);
 	}
-
 	/**
 	 * 构造方法
 	 * 
@@ -98,45 +84,11 @@ public class Client {
 	 *            昵称
 0	 */
 	public Client(String ip, int port, String nickName) {
-		// 创建组件
-		textArea = new JTextArea();
-		textArea.setEditable(false);
-		textArea.setForeground(Color.blue);
-		textField = new JTextField();
-		btn_send = new JButton("发送");
-		listModel = new DefaultListModel();
-		userList = new JList(listModel);
-
-		leftScroll = new JScrollPane(textArea);
-		leftScroll.setBorder(new TitledBorder("消息显示区"));
-		rightScroll = new JScrollPane(userList);
-		rightScroll.setBorder(new TitledBorder("在线用户"));
-		southPanel = new JPanel(new BorderLayout());
-		southPanel.add(textField, BorderLayout.CENTER);
-		southPanel.add(btn_send, BorderLayout.EAST);
-		southPanel.setBorder(new TitledBorder("写消息"));
-
-		tabs = new JTabbedPane();
-		tabs.addTab("Public", new JLabel("群聊中"));
-		leftPanel = new JPanel(new BorderLayout());
-		leftPanel.add(tabs, BorderLayout.NORTH);
-		leftPanel.add(leftScroll, BorderLayout.CENTER);
-
-		centerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightScroll);
-		centerSplit.setDividerLocation(400);
-
-		frame = new JFrame("Client");
-		frame.setLayout(new BorderLayout());
-		frame.add(centerSplit, BorderLayout.CENTER);
-		frame.add(southPanel, BorderLayout.SOUTH);
-		frame.setSize(600, 400);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-
+		this.CCUI=new ClientChatUI();
 		contentList.add(new StringBuffer());
 		// 连接服务器
 		if (connectServer(ip, port, nickName)) {
-			frame.setTitle("Client - " + nickName);
+			CCUI.getFrame().setTitle("Client - " + nickName);
 			this.name = nickName;
 		} else {
 			System.err.println("服务器连接失败！");
@@ -144,21 +96,21 @@ public class Client {
 		}
 
 		// 写消息的文本框中按回车键时事件
-		textField.addActionListener(new ActionListener() {
+		CCUI.getTextField().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				send();
 			}
 		});
 
 		// 单击发送按钮时事件
-		btn_send.addActionListener(new ActionListener() {
+		CCUI.getBtn_send().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				send();
 			}
 		});
 
 		// 关闭窗口时事件
-		frame.addWindowListener(new WindowAdapter() {
+		CCUI.getFrame().addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				closeConnection();// 关闭连接
 				System.exit(0);
@@ -166,7 +118,7 @@ public class Client {
 		});
 
 		// JList 监听器
-		userList.addListSelectionListener(new ListSelectionListener() {
+		CCUI.getUserList().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
@@ -180,14 +132,14 @@ public class Client {
 		});
 
 		// tabs 监听器
-		tabs.addChangeListener(new ChangeListener() {
+		CCUI.getTabs().addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent ce) {
 				JTabbedPane p = (JTabbedPane) ce.getSource();
 				int idx = p.getSelectedIndex();
 				currentTabName = p.getTitleAt(idx);
-				textArea.setText(contentList.get(idx).toString());
+				CCUI.getTextArea().setText(contentList.get(idx).toString());
 			}
 		});
 	}
@@ -209,7 +161,7 @@ public class Client {
 			// sendMessage(name + "@" + socket.getLocalAddress().toString());
 			sendMessage("Login@" + name);
 			// 开启接收消息的线程
-			messageThread = new MessageThread(reader, textArea);
+			messageThread = new MessageThread(reader, CCUI.getTextArea(), CCUI, this);
 			messageThread.start();
 			return true;
 		} catch (Exception e) {
@@ -251,116 +203,51 @@ public class Client {
 		}
 	}
 
-	// 不断接收消息的线程
-	class MessageThread extends Thread {
-		private BufferedReader reader;
-		private JTextArea textArea;
 
-		// 接收消息线程的构造方法
-		public MessageThread(BufferedReader reader, JTextArea textArea) {
-			this.reader = reader;
-			this.textArea = textArea;
-		}
-
-		// 被动的关闭连接
-		public synchronized void closeCon() throws Exception {
-			// 清空用户列表
-			listModel.removeAllElements();
-			// 被动的关闭连接释放资源
-			if (reader != null) {
-				reader.close();
-			}
-			if (writer != null) {
-				writer.close();
-			}
-			if (socket != null) {
-				socket.close();
-			}
-		}
-
-		public void run() {
-			String message = "";
-			while (true) {
-				try {
-					message = reader.readLine();
-					System.out.println("[Client] " + message);
-					String[] sp = message.split("@");
-
-					if (sp[0].equals("Logout@")) {// 服务器要求断开链接
-						textArea.append("服务器已关闭!\r\n");
-						closeCon();// 被关闭连接
-
-					} else if (sp[0].equals("Add")) { // 新增用户
-						String username = sp[1];
-						listModel.addElement(username);
-					} else if (sp[0].equals("UserList")) { // 用户列表
-						String[] usernames = sp[1].split("#");
-						for (String username : usernames) {
-							if (username.length() == 0) {
-								continue;
-							}
-							listModel.addElement(username);
-						}
-					} else if (sp[0].equals("Delete")) { // 删除用户
-						String username = sp[1];
-						listModel.removeElement(username);
-
-					} else if (sp[0].equals("Public")) {// 群聊消息
-						String s = sp[1];// 发送者
-						// String r = sp[2];// 接收者, 固定为ALL
-						String c = sp[3];// 消息内容
-						// textArea.append("[群聊]" + s + ":\r\n" + c + "\r\n\r\n");
-						addMessage("Public", s + ":\r\n" + c + "\r\n\r\n");
-						System.out.println("[群聊]" + s + ": " + c + "\r\n");
-					} else if (sp[0].equals("Private")) {
-						String s = sp[1];// 发送者
-						String r = sp[2];// 接收者, 固定为自己
-						String c = sp[3];// 消息内容
-						// textArea.append("[私聊]" + s + ":\r\n" + c + "\r\n\r\n");// 暂时放在群聊窗口中
-						for (String str : sp) {
-							System.out.println(str);
-						}
-						System.out.println("----");
-						String s2 = s.equals(name) ? r : s;
-						addMessage(s2, s + ":\r\n" + c + "\r\n");
-						System.out.println("[私聊]" + s + ": " + c + "\r\n");
-					}
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	private void addMessage(String r, String msg) {
-		int i = 0;
-		for (; i < tabs.getTabCount(); i++) {
-			if (tabs.getTitleAt(i).equals(r)) {
+	public void addMessage(String r, String msg) {
+		int i=0;
+		for (; i < CCUI.getTabs().getTabCount(); i++) {
+			if (CCUI.getTabs().getTitleAt(i).equals(r)) {
 				contentList.get(i).append(msg);
 				break;
 			}
 		}
 
-		if (i == tabs.getTabCount()) {
-			tabs.addTab(r, new JLabel("与" + r + "聊天中"));
+		if (i == CCUI.getTabs().getTabCount()) {
+			CCUI.getTabs().addTab(r, new JLabel("与" + r + "聊天中"));
 			StringBuffer sb = new StringBuffer();
 			sb.append(msg);
 			contentList.add(sb);
-			tabs.setSelectedIndex(tabs.getTabCount() - 1);
+			CCUI.getTabs().setSelectedIndex(CCUI.getTabs().getTabCount() - 1);
 		}
 
 		currentTabName = r;
 		showMessage();
 	}
 
-	private void showMessage() {
-		for (int i = 0; i < tabs.getTabCount(); i++) {
-			if (tabs.getTitleAt(i).equals(currentTabName)) {
-				textArea.setText(contentList.get(i).toString());
+	public void showMessage() {
+		for (int i = 0; i < CCUI.getTabs().getTabCount(); i++) {
+			if (CCUI.getTabs().getTitleAt(i).equals(currentTabName)) {
+				CCUI.getTextArea().setText(contentList.get(i).toString());
 			}
 		}
 	}
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public PrintWriter getWriter() {
+		return writer;
+	}
+
+	public BufferedReader getReader() {
+		return reader;
+	}
+
+	public String getName() {
+		return name;
+	}
+	
+	
 }

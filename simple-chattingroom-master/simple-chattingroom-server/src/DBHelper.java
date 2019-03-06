@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.*;
+import java.sql.SQLException;
 
 public class DBHelper {
 	
@@ -114,7 +113,40 @@ public class DBHelper {
 		}
 			return b;
 		}
-		
+		public boolean checknewUser(String username)
+		{
+			boolean b = false;
+			PreparedStatement psmt = null;
+			try{
+				
+				//��֯sql���Ͳ����б�
+				String sql = "select username from QQuser where username=?";
+				psmt = ct.prepareStatement(sql);
+				psmt.setString(1, username);
+				ResultSet rs = psmt.executeQuery();
+				if(rs.next())
+				{
+					b=true;
+				}
+				rs.close();
+	            psmt.close();
+			}
+			catch(SQLException se){
+	            // ���� JDBC ����
+	            se.printStackTrace();
+	        }catch(Exception e){
+	            // ���� Class.forName ����
+	            e.printStackTrace();
+	        }finally{
+	            // �ر���Դ
+	            try{
+	                if(psmt!=null) psmt.close();
+	            }catch(SQLException se2){
+	            }// ʲô������
+			
+		}
+			return b;
+		}
 		public void insertUser(String username,String password) {
 			
 			
