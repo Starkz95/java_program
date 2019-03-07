@@ -65,7 +65,7 @@ public class ClientThread extends Thread{
 		while (true) {
 			try {
 				message = reader.readLine();// 接收客户端消息
-				if (message.equals("Logout@"))// 下线
+				if (message.equals("Logout"))// 下线
 				{
 					SUI.getContentArea().append(this.getUserName() + " 下线!\r\n");
 					// 断开连接释放资源
@@ -75,7 +75,7 @@ public class ClientThread extends Thread{
 
 					// 向所有在线用户发送该用户的下线命令
 					for (int i = clients.size() - 1; i >= 0; i--) {
-						clients.get(i).getWriter().println("Delete@" + clients.get(i).getUserName());
+						clients.get(i).getWriter().println("Delete@" + userName);
 						clients.get(i).getWriter().flush();
 					}
 

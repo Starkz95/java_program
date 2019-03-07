@@ -41,11 +41,12 @@ public class MessageThread extends Thread{
 				System.out.println("[Client] " + message);
 				String[] sp = message.split("@");
 
-				if (sp[0].equals("Logout@")) {// 服务器要求断开链接
+				if (sp[0].equals("CLOSE")) {// 服务器要求断开链接
 					textArea.append("服务器已关闭!\r\n");
 					closeCon();// 被关闭连接
 
-				} else if (sp[0].equals("Add")) { // 新增用户
+		        }
+				 if (sp[0].equals("Add")) { // 新增用户
 					String username = sp[1];
 					CCUI.getListModel().addElement(username);
 				} else if (sp[0].equals("UserList")) { // 用户列表

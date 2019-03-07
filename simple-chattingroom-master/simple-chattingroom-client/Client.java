@@ -53,7 +53,7 @@ public class Client {
 //		} else {
 //			System.err.println("启动方式：java -jar client.jar server_ip server_port nickname");
 //		}
-		new Client("localhost", 8888, "32");
+		new Client("localhost", 8888, "42");
 
 	}
 
@@ -184,7 +184,7 @@ public class Client {
 	 */
 	public synchronized boolean closeConnection() {
 		try {
-			sendMessage("Logout@");// 发送断开连接命令给服务器
+			sendMessage("Logout");// 发送断开连接命令给服务器
 			messageThread.stop();// 停止接受消息线程
 			// 释放资源
 			if (reader != null) {
