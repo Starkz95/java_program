@@ -29,13 +29,13 @@ public class Server {
 	private boolean isStart = false;
 
 	// 主方法,程序执行入口
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		if (args.length == 1) {
 			// 命令行参数 java -jar server.jar port
 			int port = Integer.parseInt(args[0]);
 			new Server(port);
 		} else {
-			new Server(8888);
+			new Server(8000);
 		}
 	}
 

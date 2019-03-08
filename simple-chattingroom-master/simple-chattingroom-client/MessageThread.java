@@ -46,7 +46,7 @@ public class MessageThread extends Thread{
 					closeCon();// 被关闭连接
 
 		        }
-				 if (sp[0].equals("Add")) { // 新增用户
+				else if (sp[0].equals("Add")) { // 新增用户
 					String username = sp[1];
 					CCUI.getListModel().addElement(username);
 				} else if (sp[0].equals("UserList")) { // 用户列表

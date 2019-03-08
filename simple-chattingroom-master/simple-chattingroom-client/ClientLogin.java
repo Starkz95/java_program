@@ -29,7 +29,6 @@ public class ClientLogin {
         loginUI = new ClientLoginUI();
 
         socket = new Socket(host, port);
-        scanner = new Scanner(System.in);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         
@@ -71,6 +70,7 @@ public class ClientLogin {
         String mess=in.readLine();
         if (mess.equals("1")) {
             loginUI.successfulLogin();
+            new Client(socket, loginUI.getUserText().getText());
         } else {
             loginUI.loginFailed();
         }

@@ -44,18 +44,18 @@ public class Client {
 	private String currentTabName = "Public";
 
 	// 主方法,程序入口
-	public static void main(String[] args) {
-//		if (args.length == 3) {
-//			String ip = args[0];
-//			int port = Integer.parseInt(args[1]);
-//			String nickName = args[2];
-//			new Client(ip, port, nickName);
-//		} else {
-//			System.err.println("启动方式：java -jar client.jar server_ip server_port nickname");
-//		}
-		new Client("localhost", 8888, "42");
-
-	}
+//	public static void main(String[] args) {
+////		if (args.length == 3) {
+////			String ip = args[0];
+////			int port = Integer.parseInt(args[1]);
+////			String nickName = args[2];
+////			new Client(ip, port, nickName);
+////		} else {
+////			System.err.println("启动方式：java -jar client.jar server_ip server_port nickname");
+////		}
+//		//new Client("localhost", 8000, "44");
+//
+//	}
 
 	// 执行发送
 	public void send() {
@@ -83,11 +83,11 @@ public class Client {
 	 * @param nickName
 	 *            昵称
 0	 */
-	public Client(String ip, int port, String nickName) {
+	public Client(Socket socket, String nickName) {
 		this.CCUI=new ClientChatUI();
 		contentList.add(new StringBuffer());
 		// 连接服务器
-		if (connectServer(ip, port, nickName)) {
+		if (connectServer(socket, nickName)) {
 			CCUI.getFrame().setTitle("Client - " + nickName);
 			this.name = nickName;
 		} else {
@@ -151,15 +151,15 @@ public class Client {
 	 * @param hostIp
 	 * @param name
 	 */
-	public boolean connectServer(String hostIp, int port, String name) {
+	public boolean connectServer(Socket socket, String name) {
 		// 连接服务器
 		try {
-			socket = new Socket(hostIp, port);
+			//socket = new Socket(hostIp, port);
 			writer = new PrintWriter(socket.getOutputStream());
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			// 用户上线
 			// sendMessage(name + "@" + socket.getLocalAddress().toString());
-			sendMessage("Login@" + name);
+			sendMessage("Logon@" + name);
 			// 开启接收消息的线程
 			messageThread = new MessageThread(reader, CCUI.getTextArea(), CCUI, this);
 			messageThread.start();

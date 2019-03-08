@@ -21,11 +21,12 @@ public class ServerThread extends Thread{
 		while (true) {// 不停的等待客户端的链接
 			try {
 				Socket socket = serverSocket.accept();
-				ClientThread client = new ClientThread(socket,clients,SUI);
-				client.start();// 开启对此客户端服务的线程
-				clients.add(client);
-				SUI.getListModel().addElement(client.getUserName());// 更新在线列表
-				SUI.getContentArea().append(client.getUserName() + " 上线!\r\n");
+				new ServerLoginThread(socket,clients,SUI);
+//				ClientThread client = new ClientThread(socket,clients,SUI);
+//				client.start();// 开启对此客户端服务的线程
+//				clients.add(client);
+//				SUI.getListModel().addElement(client.getUserName());// 更新在线列表
+//				SUI.getContentArea().append(client.getUserName() + " 上线!\r\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

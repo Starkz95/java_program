@@ -30,7 +30,7 @@ public class ClientThread extends Thread{
 			// StringTokenizer st = new StringTokenizer(inf, "@");
 			// user = new User(st.nextToken(), st.nextToken());
 			String[] sp = inf.split("@");
-			if (sp.length != 2 || !sp[0].equals("Login")) {
+			if (sp.length != 2 || !sp[0].equals("Logon")) {
 				return;
 			}
 			userName = sp[1];

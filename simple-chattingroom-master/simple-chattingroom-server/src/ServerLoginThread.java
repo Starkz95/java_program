@@ -5,18 +5,23 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerLoginThread extends Thread {
-    private ServerLogin server;
+   
     private Socket socket;
     boolean login;
     boolean register;
-
-    public ServerLoginThread(ServerLogin server, Socket socket) {
-        this.server = server;
+    private ArrayList<ClientThread> clients;
+	private ServerUI SUI;
+	
+    public ServerLoginThread(Socket socket,ArrayList<ClientThread> clients,ServerUI SUI) {
+        
         this.socket = socket;
         this.login = false;
         this.register = false;
+        this.clients=clients;
+		this.SUI=SUI;
         start();
     }
 
@@ -37,6 +42,12 @@ public class ServerLoginThread extends Thread {
                 	if (login) {
                     //System.out.println(loginInfo[0] + "is online");
                 		out.println("1");
+        				ClientThread client = new ClientThread(socket,clients,SUI);
+        				client.start();// 开启对此客户端服务的线程
+        				clients.add(client);
+        				SUI.getListModel().addElement(client.getUserName());// 更新在线列表
+        				SUI.getContentArea().append(client.getUserName() + " 上线!\r\n");
+        				break;
                 	
                 	}else {
                 		out.println("0");
