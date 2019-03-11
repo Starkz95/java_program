@@ -34,7 +34,7 @@ public class ClientLoginUI {
         panel.add(passwordText);
         loginButton.setBounds(60, 80, 80, 25);
         panel.add(loginButton);
-        registerButton.setBounds(200, 80, 80, 25);
+        registerButton.setBounds(200, 80, 100, 25);
         panel.add(registerButton);
     }
 
