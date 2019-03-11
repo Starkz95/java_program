@@ -13,10 +13,6 @@ import java.util.Scanner;
 public class ClientLogin {
 
 
-
-    private int flag;//if flag == 0 perform sendToUser else sendToGroup;
-    private String message;
-    private Scanner scanner;
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
@@ -70,6 +66,7 @@ public class ClientLogin {
         String mess=in.readLine();
         if (mess.equals("1")) {
             loginUI.successfulLogin();
+            loginUI.getFrame().setVisible(false);
             new Client(socket, loginUI.getUserText().getText());
         } else {
             loginUI.loginFailed();

@@ -4,29 +4,36 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 
-//服务器线程
 public class ServerThread extends Thread{
 	private ServerSocket serverSocket;
 	private ArrayList<ClientThread> clients;
 	private ServerUI SUI;
 
-	// 服务器线程的构造方法
+	/**
+	 * constructor
+	 * @param serverSocket
+	 * @param clients
+	 * @param SUI
+	 */
 	public ServerThread(ServerSocket serverSocket,ArrayList<ClientThread> clients,ServerUI SUI) {
 		this.serverSocket = serverSocket;
 		this.clients=clients;
 		this.SUI=SUI;
 	}
-
+	
+	/**
+	 * 
+	 */
 	public void run() {
-		while (true) {// 不停的等待客户端的链接
+		while (true) {
 			try {
 				Socket socket = serverSocket.accept();
 				new ServerLoginThread(socket,clients,SUI);
 //				ClientThread client = new ClientThread(socket,clients,SUI);
-//				client.start();// 开启对此客户端服务的线程
+//				client.start();// start the client thread for this user
 //				clients.add(client);
-//				SUI.getListModel().addElement(client.getUserName());// 更新在线列表
-//				SUI.getContentArea().append(client.getUserName() + " 上线!\r\n");
+//				SUI.getListModel().addElement(client.getUserName());// refresh the user list
+//				SUI.getContentArea().append(client.getUserName() + " is online!\r\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

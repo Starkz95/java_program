@@ -26,10 +26,10 @@ public class ServerUI {
 		userList = new JList(listModel);
 
 		rightPanel = new JScrollPane(userList);
-		rightPanel.setBorder(new TitledBorder("在线用户"));
+		rightPanel.setBorder(new TitledBorder("Online users"));
 
 		leftPanel = new JScrollPane(contentArea);
-		leftPanel.setBorder(new TitledBorder("消息显示区"));
+		leftPanel.setBorder(new TitledBorder("Message"));
 
 		centerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
 		centerSplit.setDividerLocation(400);

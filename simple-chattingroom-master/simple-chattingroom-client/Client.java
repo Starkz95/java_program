@@ -37,35 +37,23 @@ public class Client {
 	private Socket socket;
 	private PrintWriter writer;
 	private BufferedReader reader;
-	private MessageThread messageThread;// 负责接收消息的线程
+	private MessageThread messageThread;// thread for receiving messages
 	private String name = "Null";
 
 	private ArrayList<StringBuffer> contentList = new ArrayList<StringBuffer>();
 	private String currentTabName = "Public";
 
-	// 主方法,程序入口
-//	public static void main(String[] args) {
-////		if (args.length == 3) {
-////			String ip = args[0];
-////			int port = Integer.parseInt(args[1]);
-////			String nickName = args[2];
-////			new Client(ip, port, nickName);
-////		} else {
-////			System.err.println("启动方式：java -jar client.jar server_ip server_port nickname");
-////		}
-//		//new Client("localhost", 8000, "44");
-//
-//	}
 
-	// 执行发送
+	// send messages
 	public void send() {
 		String message = CCUI.getTextField().getText().trim();
 		if (message == null || message.equals("")) {
-			JOptionPane.showMessageDialog(CCUI.getFrame(), "消息不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(CCUI.getFrame(), "message can't be null!", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		// sendMessage(frame.getTitle() + "@" + "ALL" + "@" + message);
-		// 发送群聊消息
+		
+		// send public messages
 		if (currentTabName.equals("Public")) {
 			sendMessage("Public@" + this.name + "@ALL@" + message);
 		} else {
@@ -73,43 +61,42 @@ public class Client {
 		}
 		CCUI.getTextField().setText(null);
 	}
+	
 	/**
-	 * 构造方法
-	 * 
+	 * Constructor
 	 * @param ip
-	 *            服务器ip
-	 * @param port
-	 *            端口
+	 * @param port      
 	 * @param nickName
-	 *            昵称
+	 *           
 0	 */
 	public Client(Socket socket, String nickName) {
 		this.CCUI=new ClientChatUI();
 		contentList.add(new StringBuffer());
-		// 连接服务器
+		// connect to server
 		if (connectServer(socket, nickName)) {
 			CCUI.getFrame().setTitle("Client - " + nickName);
 			this.name = nickName;
 		} else {
-			System.err.println("服务器连接失败！");
+			System.err.println("Fail to connect to the server");
 			System.exit(0);
 		}
 
-		// 写消息的文本框中按回车键时事件
+		// press "Enter" to send messages
 		CCUI.getTextField().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				send();
 			}
 		});
 
-		// 单击发送按钮时事件
+		// press button to send messages
 		CCUI.getBtn_send().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				send();
 			}
 		});
+		
 
-		// 关闭窗口时事件
+		// close the window
 		CCUI.getFrame().addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				closeConnection();// 关闭连接
@@ -117,7 +104,7 @@ public class Client {
 			}
 		});
 
-		// JList 监听器
+		// choose users to chat
 		CCUI.getUserList().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
@@ -131,7 +118,7 @@ public class Client {
 			}
 		});
 
-		// tabs 监听器
+		// change the tabs
 		CCUI.getTabs().addChangeListener(new ChangeListener() {
 
 			@Override
@@ -145,22 +132,21 @@ public class Client {
 	}
 
 	/**
-	 * 连接服务器
+	 * connecting to the server
 	 * 
 	 * @param port
 	 * @param hostIp
 	 * @param name
 	 */
 	public boolean connectServer(Socket socket, String name) {
-		// 连接服务器
 		try {
-			//socket = new Socket(hostIp, port);
+			
 			writer = new PrintWriter(socket.getOutputStream());
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			// 用户上线
+			// when the user is online
 			// sendMessage(name + "@" + socket.getLocalAddress().toString());
 			sendMessage("Logon@" + name);
-			// 开启接收消息的线程
+			// start the messages thread
 			messageThread = new MessageThread(reader, CCUI.getTextArea(), CCUI, this);
 			messageThread.start();
 			return true;
@@ -170,8 +156,7 @@ public class Client {
 	}
 
 	/**
-	 * 发送消息
-	 * 
+	 * send the messages to the server
 	 * @param message
 	 */
 	public void sendMessage(String message) {
@@ -180,13 +165,13 @@ public class Client {
 	}
 
 	/**
-	 * 客户端主动关闭连接
+	 * close connection to server for client
 	 */
 	public synchronized boolean closeConnection() {
 		try {
-			sendMessage("Logout");// 发送断开连接命令给服务器
-			messageThread.stop();// 停止接受消息线程
-			// 释放资源
+			sendMessage("Logout");// send "Logout" to the server
+			messageThread.stop();// stop the thread
+			
 			if (reader != null) {
 				reader.close();
 			}
@@ -203,7 +188,11 @@ public class Client {
 		}
 	}
 
-
+	/**
+	 * chat with a user with a new tab
+	 * @param r
+	 * @param msg
+	 */
 	public void addMessage(String r, String msg) {
 		int i=0;
 		for (; i < CCUI.getTabs().getTabCount(); i++) {
@@ -214,7 +203,7 @@ public class Client {
 		}
 
 		if (i == CCUI.getTabs().getTabCount()) {
-			CCUI.getTabs().addTab(r, new JLabel("与" + r + "聊天中"));
+			CCUI.getTabs().addTab(r, new JLabel("Chatting with" + r ));
 			StringBuffer sb = new StringBuffer();
 			sb.append(msg);
 			contentList.add(sb);
@@ -224,7 +213,10 @@ public class Client {
 		currentTabName = r;
 		showMessage();
 	}
-
+	
+	/**
+	 * show the messages in the textarea which correspond to the user
+	 */
 	public void showMessage() {
 		for (int i = 0; i < CCUI.getTabs().getTabCount(); i++) {
 			if (CCUI.getTabs().getTitleAt(i).equals(currentTabName)) {
@@ -247,6 +239,9 @@ public class Client {
 
 	public String getName() {
 		return name;
+	}
+	public ArrayList<StringBuffer> getContentList() {
+		return contentList;
 	}
 	
 	

@@ -24,7 +24,10 @@ public class ServerLoginThread extends Thread {
 		this.SUI=SUI;
         start();
     }
-
+    
+    /**
+     * check the user when he is login and registering
+     */
     @Override
     public void run() {
         try {
@@ -43,10 +46,10 @@ public class ServerLoginThread extends Thread {
                     //System.out.println(loginInfo[0] + "is online");
                 		out.println("1");
         				ClientThread client = new ClientThread(socket,clients,SUI);
-        				client.start();// 开启对此客户端服务的线程
+        				client.start();// start the client thread for this user
         				clients.add(client);
-        				SUI.getListModel().addElement(client.getUserName());// 更新在线列表
-        				SUI.getContentArea().append(client.getUserName() + " 上线!\r\n");
+        				SUI.getListModel().addElement(client.getUserName());// refresh the user list
+        				SUI.getContentArea().append(client.getUserName() + " is online!\r\n");
         				break;
                 	
                 	}else {

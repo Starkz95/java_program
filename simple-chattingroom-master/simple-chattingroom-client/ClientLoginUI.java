@@ -19,6 +19,7 @@ public class ClientLoginUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
         init();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
@@ -68,4 +69,9 @@ public class ClientLoginUI {
     public JButton getLoginButton() {
     	return loginButton;
     }
+
+	public JFrame getFrame() {
+		return frame;
+	}
+    
 }

@@ -21,6 +21,7 @@ public class ClientRegisterUI {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(panel);
         init();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 

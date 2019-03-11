@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -36,27 +37,32 @@ public class ClientChatUI {
 	private JTabbedPane tabs;
 	private JPanel leftPanel;
 	private DefaultListModel listModel;
+	private JButton exitButton;
 	
+
 	public ClientChatUI() {
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setForeground(Color.blue);
 		textField = new JTextField();
-		btn_send = new JButton("发送");
+		btn_send = new JButton("Send");
 		listModel = new DefaultListModel();
 		userList = new JList(listModel);
 
+	    exitButton=new JButton("X");
+	    exitButton.setPreferredSize( new Dimension(20,20));
+		
 		leftScroll = new JScrollPane(textArea);
-		leftScroll.setBorder(new TitledBorder("消息显示区"));
+		leftScroll.setBorder(new TitledBorder("Message"));
 		rightScroll = new JScrollPane(userList);
-		rightScroll.setBorder(new TitledBorder("在线用户"));
+		rightScroll.setBorder(new TitledBorder("Online user"));
 		southPanel = new JPanel(new BorderLayout());
 		southPanel.add(textField, BorderLayout.CENTER);
 		southPanel.add(btn_send, BorderLayout.EAST);
-		southPanel.setBorder(new TitledBorder("写消息"));
+		southPanel.setBorder(new TitledBorder("Send message"));
 
 		tabs = new JTabbedPane();
-		tabs.addTab("Public", new JLabel("群聊中"));
+		tabs.addTab("Public", new JLabel("Public chat"));
 		leftPanel = new JPanel(new BorderLayout());
 		leftPanel.add(tabs, BorderLayout.NORTH);
 		leftPanel.add(leftScroll, BorderLayout.CENTER);
@@ -120,6 +126,10 @@ public class ClientChatUI {
 
 	public DefaultListModel getListModel() {
 		return listModel;
+	}
+	
+	public JButton getExitButton() {
+		return exitButton;
 	}
 	
 }

@@ -16,9 +16,12 @@ public class DBHelper {
 	private String username = "root";
 	private String password = "root";
 	
+	/**
+	 * constructor
+	 */
 	public DBHelper() {
 		try {
-			//��������
+			//connecting to the database
 			Class.forName(driver);
 			ct = DriverManager.getConnection(url,username,password);
 		} catch (Exception e) {
@@ -27,7 +30,9 @@ public class DBHelper {
 		}
 	}
 	
-	//�ر���Դ
+	/**
+	 * close the connection
+	 */
 		public void close()
 		{
 			try {
@@ -40,7 +45,12 @@ public class DBHelper {
 			}
 		}
 		
-		//�Ѷ����ݿ����ɾ��
+		/**
+		 * SQL execution
+		 * @param sql
+		 * @param paras
+		 * @return
+		 */
 		public boolean exeUpdate(String sql,String []paras)
 		{
 			boolean b = true;
@@ -60,7 +70,12 @@ public class DBHelper {
 			return b;
 		}
 
-		//�����ݿ�Ĳ�ѯ
+		/**
+		 * SQL execution
+		 * @param sql
+		 * @param paras
+		 * @return
+		 */
 		public ResultSet query(String sql,String []paras)
 		{
 			try {
@@ -78,13 +93,18 @@ public class DBHelper {
 			return rs;
 		}
 		
+		/**
+		 * check the user when he is login
+		 * @param username
+		 * @param password
+		 * @return
+		 */
 		public boolean checkUser(String username,String password)
 		{
 			boolean b = false;
 			PreparedStatement psmt = null;
 			try{
 				
-				//��֯sql���Ͳ����б�
 				String sql = "select username,password from QQuser where username=? and password=?";
 				psmt = ct.prepareStatement(sql);
 				psmt.setString(1, username);
@@ -98,28 +118,30 @@ public class DBHelper {
 	            psmt.close();
 			}
 			catch(SQLException se){
-	            // ���� JDBC ����
 	            se.printStackTrace();
 	        }catch(Exception e){
-	            // ���� Class.forName ����
 	            e.printStackTrace();
 	        }finally{
-	            // �ر���Դ
 	            try{
 	                if(psmt!=null) psmt.close();
 	            }catch(SQLException se2){
-	            }// ʲô������
+	            }
 			
 		}
 			return b;
 		}
+		
+		/**
+		 * check the user if the username has existed when he is registering
+		 * @param username
+		 * @return
+		 */
 		public boolean checknewUser(String username)
 		{
 			boolean b = false;
 			PreparedStatement psmt = null;
 			try{
 				
-				//��֯sql���Ͳ����б�
 				String sql = "select username from QQuser where username=?";
 				psmt = ct.prepareStatement(sql);
 				psmt.setString(1, username);
@@ -132,28 +154,31 @@ public class DBHelper {
 	            psmt.close();
 			}
 			catch(SQLException se){
-	            // ���� JDBC ����
 	            se.printStackTrace();
 	        }catch(Exception e){
-	            // ���� Class.forName ����
 	            e.printStackTrace();
 	        }finally{
-	            // �ر���Դ
+	            
 	            try{
 	                if(psmt!=null) psmt.close();
 	            }catch(SQLException se2){
-	            }// ʲô������
+	            }
 			
 		}
 			return b;
 		}
+		
+		/**
+		 * insert the user to the database if a user successfully registers
+		 * @param username
+		 * @param password
+		 */
 		public void insertUser(String username,String password) {
 			
 			
 			PreparedStatement psmt = null;
 			try{
 				
-				//��֯sql���Ͳ����б�
 				String sql = "insert into QQuser (username,password) values(?, ?)";
 				psmt = ct.prepareStatement(sql);
 				psmt.setString(1, username);
@@ -162,17 +187,17 @@ public class DBHelper {
 				
 			}
 			catch(SQLException se){
-	            // ���� JDBC ����
+	        
 	            se.printStackTrace();
 	        }catch(Exception e){
-	            // ���� Class.forName ����
+	            
 	            e.printStackTrace();
 	        }finally{
-	            // �ر���Դ
+	            
 	            try{
 	                if(psmt!=null) psmt.close();
 	            }catch(SQLException se2){
-	            }// ʲô������
+	            }
 			
 		}
 		}

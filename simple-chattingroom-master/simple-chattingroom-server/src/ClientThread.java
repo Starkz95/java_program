@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 
-//为一个客户端服务的线程
+
 public class ClientThread extends Thread{
 
 	private Socket socket;
@@ -16,7 +16,12 @@ public class ClientThread extends Thread{
 	private ArrayList<ClientThread> clients;
 	private ServerUI SUI; 
 
-	// 客户端线程的构造方法
+	/**
+	 * constructor
+	 * @param socket
+	 * @param clients
+	 * @param SUI
+	 */
 	public ClientThread(Socket socket,ArrayList<ClientThread> clients,ServerUI SUI) {
 		this.socket = socket;
 		this.clients=clients;
@@ -25,20 +30,19 @@ public class ClientThread extends Thread{
 			
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new PrintWriter(socket.getOutputStream());
-			// 接收客户端的基本用户信息
+			
 			String inf = reader.readLine();
-			// StringTokenizer st = new StringTokenizer(inf, "@");
-			// user = new User(st.nextToken(), st.nextToken());
+			
 			String[] sp = inf.split("@");
 			if (sp.length != 2 || !sp[0].equals("Logon")) {
 				return;
 			}
 			userName = sp[1];
-			// 反馈连接成功信息
-			writer.println("Public@Server@ALL@" + userName + " 与服务器连接成功!");
+			// send message to clients 
+			writer.println("Public@Server@ALL@" + userName + "successfully connecting to the server!");
 			writer.flush();
 
-			// 反馈当前在线用户信息
+			// send message to client how many users are online
 			if (clients.size() > 0) {
 				String allUsers = "";
 				for (int i = clients.size() - 1; i >= 0; i--) {
@@ -48,7 +52,7 @@ public class ClientThread extends Thread{
 				writer.flush();
 			}
 
-			// 向所有在线用户发送该用户上线命令
+			// Send the message that who is online to all online users
 			for (int i = clients.size() - 1; i >= 0; i--) {
 				// clients.get(i).getWriter().println("Add@" + clients.get(i).getUserName());
 				clients.get(i).getWriter().println("Add@" + userName);
@@ -59,39 +63,41 @@ public class ClientThread extends Thread{
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * receive different types of messages from client
+	 */
 	public void run() {
 		String message = null;
 		while (true) {
 			try {
-				message = reader.readLine();// 接收客户端消息
-				if (message.equals("Logout"))// 下线
+				message = reader.readLine();
+				if (message.equals("Logout"))// when the user is logout
 				{
 					SUI.getContentArea().append(this.getUserName() + " 下线!\r\n");
-					// 断开连接释放资源
 					reader.close();
 					writer.close();
 					socket.close();
 
-					// 向所有在线用户发送该用户的下线命令
+					// Send the message that who is offline to all online users
 					for (int i = clients.size() - 1; i >= 0; i--) {
 						clients.get(i).getWriter().println("Delete@" + userName);
 						clients.get(i).getWriter().flush();
 					}
 
-					SUI.getListModel().removeElement(userName);// 更新在线列表
+					SUI.getListModel().removeElement(userName);// refresh the userlist
 
-					// 删除此条客户端服务线程
+					// stop the thread for this user
 					for (int i = clients.size() - 1; i >= 0; i--) {
 						if (clients.get(i).getUserName().equals(userName)) {
 							ClientThread temp = clients.get(i);
-							clients.remove(i);// 删除此用户的服务线程
-							temp.stop();// 停止这条服务线程
+							clients.remove(i);
+							temp.stop();
 							return;
 						}
 					}
 				} else {
-					dispatcherMessage(message);// 转发消息
+					dispatcherMessage(message);
 				}
 			} catch (IOException e) {
 				// e.printStackTrace();
@@ -99,27 +105,30 @@ public class ClientThread extends Thread{
 		}
 	}
 
-	// 转发消息
+	/**
+	 * send the public messages to all online users, and send the private messages to corresponding users.
+	 * @param message
+	 */
 	public void dispatcherMessage(String message) {
 		String[] sp = message.split("@");
 		if (sp.length != 4) {
 			return;
 		}
-		if (sp[0].equals("Public")) {// 群聊消息
-			// 群发
-			String s = sp[1];// 发送者
-			// String r = sp[2];// 接收者, 固定为ALL
-			String c = sp[3];// 消息内容
-			SUI.getContentArea().append("[群聊]" + s + ": " + c + "\r\n");
+		if (sp[0].equals("Public")) {// send the public messages
+			
+			String s = sp[1];// sender
+			// String r = sp[2];// receiver
+			String c = sp[3];// message
+			SUI.getContentArea().append("[Public]" + s + ": " + c + "\r\n");
 			for (int i = clients.size() - 1; i >= 0; i--) {
 				clients.get(i).getWriter().println(message);
 				clients.get(i).getWriter().flush();
 			}
-		} else if (sp[0].equals("Private")) { // 私聊消息
-			String s = sp[1];// 发送者
-			String r = sp[2];// 接收者
-			String c = sp[3];// 消息内容
-			SUI.getContentArea().append("[私聊]" + s + " => " + r + ": " + c + "\r\n");
+		} else if (sp[0].equals("Private")) { // send the private messages
+			String s = sp[1];// sender
+			String r = sp[2];// receiver
+			String c = sp[3];// message
+			SUI.getContentArea().append("[Private]" + s + " => " + r + ": " + c + "\r\n");
 			for (int i = 0; i < clients.size(); i++) {
 				if (clients.get(i).getUserName().equals(r) || clients.get(i).getUserName().equals(s)) {
 					clients.get(i).getWriter().println(message);
