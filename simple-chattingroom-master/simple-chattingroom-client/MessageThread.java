@@ -75,8 +75,13 @@ public class MessageThread extends Thread{
 				else if (sp[0].equals("Delete")) { // delete a user from the list when he is logout
 					String username = sp[1];
 					CCUI.getListModel().removeElement(username);
-					CCUI.getTabs().removeTabAt(CCUI.getTabs().indexOfTab(username));
+					//CCUI.getTabs().removeTabAt(CCUI.getTabs().indexOfTab(username));
 					//client.addMessage("Public", "");
+					for (int i = 0; i < CCUI.getTabs().getTabCount(); i++) {
+						if (CCUI.getTabs().getTitleAt(i).equals(username)) {
+							CCUI.getTabs().remove(CCUI.getTabs().indexOfTab(username));
+						}
+					}
 					CCUI.getTabs().setSelectedIndex(CCUI.getTabs().indexOfTab("Public"));
 
 				} 
