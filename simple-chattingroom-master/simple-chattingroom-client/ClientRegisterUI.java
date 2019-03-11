@@ -28,19 +28,19 @@ public class ClientRegisterUI {
     public void init() {
         userLabel.setBounds(10, 20, 80, 25);
         panel.add(userLabel);
-        userText.setBounds(100, 20, 165, 25);
+        userText.setBounds(150, 20, 165, 25);
         panel.add(userText);
         passwordLabel.setBounds(10, 50, 80, 25);
         panel.add(passwordLabel);
-        passwordText.setBounds(100, 50, 165, 25);
+        passwordText.setBounds(150, 50, 165, 25);
         panel.add(passwordText);
-        makesurepasswordLabel.setBounds(0, 80, 80, 25);
+        makesurepasswordLabel.setBounds(0, 80, 150, 25);
         panel.add(makesurepasswordLabel);
-        makesurepasswordText.setBounds(100, 80, 165, 25);
+        makesurepasswordText.setBounds(150, 80, 165, 25);
         panel.add(makesurepasswordText);
         cancelButton.setBounds(60, 120, 80, 25);
         panel.add(cancelButton);
-        registerButton.setBounds(200, 120, 80, 25);
+        registerButton.setBounds(200, 120, 100, 25);
         panel.add(registerButton);
         
     }
