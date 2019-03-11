@@ -99,7 +99,7 @@ public class Client {
 		// close the window
 		CCUI.getFrame().addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				closeConnection();// 关闭连接
+				closeConnection();
 				System.exit(0);
 			}
 		});
