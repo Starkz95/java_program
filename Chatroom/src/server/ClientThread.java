@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 
@@ -111,6 +113,7 @@ public class ClientThread extends Thread{
 	 * @param message
 	 */
 	public void dispatcherMessage(String message) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String[] sp = message.split("@");
 		if (sp.length != 4) {
 			return;
@@ -120,6 +123,7 @@ public class ClientThread extends Thread{
 			String s = sp[1];// sender
 			// String r = sp[2];// receiver
 			String c = sp[3];// message
+			new DBHelper().insertHistory(s,"Public",df.format(new Date()) +"\n"+ s + ":   " + c + "\r\n",df.format(new Date()).toString());
 			SUI.getContentArea().append("[Public]" + s + ": " + c + "\r\n");
 			for (int i = clients.size() - 1; i >= 0; i--) {
 				clients.get(i).getWriter().println(message);
@@ -129,6 +133,7 @@ public class ClientThread extends Thread{
 			String s = sp[1];// sender
 			String r = sp[2];// receiver
 			String c = sp[3];// message
+			new DBHelper().insertHistory(s,r,df.format(new Date()) +"\n"+ s + ":   " + c + "\r\n",df.format(new Date()).toString());
 			SUI.getContentArea().append("[Private]" + s + " => " + r + ": " + c + "\r\n");
 			for (int i = 0; i < clients.size(); i++) {
 				if (clients.get(i).getUserName().equals(r) || clients.get(i).getUserName().equals(s)) {

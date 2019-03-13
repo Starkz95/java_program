@@ -12,10 +12,10 @@ public class DBHelper {
 	Connection ct = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
-	private String driver = "org.postgresql.Driver";
-	private String url = "jdbc:postgresql://mod-msc-sw1.cs.bham.ac.uk:5432/group23";
-	private String username = "group23";
-	private String password = "0ov2qfds3j";
+	private String driver = "com.mysql.jdbc.Driver";
+	private String url = "jdbc:mysql://localhost:3306/qqdb?useUnicode=true&characterEncoding=utf-8";
+	private String username = "root";
+	private String password = "root";
 	
 	/**
 	 * constructor
@@ -106,7 +106,7 @@ public class DBHelper {
 			PreparedStatement psmt = null;
 			try{
 				
-				String sql = "select username,password from account where username=? and password=?";
+				String sql = "select username,password from QQuser where username=? and password=?";
 				psmt = ct.prepareStatement(sql);
 				psmt.setString(1, username);
 				psmt.setString(2, password);
@@ -143,7 +143,7 @@ public class DBHelper {
 			PreparedStatement psmt = null;
 			try{
 				
-				String sql = "select username from account where username=?";
+				String sql = "select username from QQuser where username=?";
 				psmt = ct.prepareStatement(sql);
 				psmt.setString(1, username);
 				ResultSet rs = psmt.executeQuery();
@@ -180,7 +180,7 @@ public class DBHelper {
 			PreparedStatement psmt = null;
 			try{
 				
-				String sql = "insert into account (username,password) values(?, ?)";
+				String sql = "insert into QQuser (username,password) values(?, ?)";
 				psmt = ct.prepareStatement(sql);
 				psmt.setString(1, username);
 				psmt.setString(2, password);
@@ -201,6 +201,101 @@ public class DBHelper {
 	            }
 			
 		}
+		}
+		
+		public void insertHistory(String Sender,String Receiver, String Message,String date) {
+			
+			
+			PreparedStatement psmt = null;
+			try{
+				
+				String sql = "insert into History (sender,receiver,message,date) values(?, ?, ?,?)";
+				//String sql = "insert into QQuser (username,message) values(?, ?)";
+				psmt = ct.prepareStatement(sql);
+				psmt.setString(1, Sender);
+				psmt.setString(2, Receiver);
+				psmt.setString(3, Message);
+				psmt.setString(4, date);
+				psmt.execute();
+				
+			}
+			catch(SQLException se){
+	            
+	            se.printStackTrace();
+	        }catch(Exception e){
+	            
+	            e.printStackTrace();
+	        }finally{
+	            
+	            try{
+	                if(psmt!=null) psmt.close();
+	            }catch(SQLException se2){
+	            }
+			
+		}
+		}
+		
+		public  String  getPrivateHistory(String Sender, String Receiver)
+		{
+			PreparedStatement psmt = null;
+			String res = "";
+			try{
+				
+				String sql = "select message from History where (sender=? and receiver=?) or (sender=? and receiver=?) order by date asc";
+				psmt = ct.prepareStatement(sql);
+				psmt.setString(1, Sender);
+				psmt.setString(2, Receiver);
+				psmt.setString(3, Receiver);
+				psmt.setString(4, Sender);
+				ResultSet rs = psmt.executeQuery();
+				while(rs.next()) {
+					res = res + rs.getString("message") + "\n";
+				}
+				rs.close();
+	            psmt.close();
+			}
+			catch(SQLException se){
+	            se.printStackTrace();
+	        }catch(Exception e){
+	            e.printStackTrace();
+	        }finally {
+	            try{
+	                if(psmt!=null) psmt.close();
+	            }catch(SQLException se2){
+	            }
+			
+	        }
+			return res;
+		}
+		
+		public  String  getPublicHistory()
+		{
+			PreparedStatement psmt = null;
+			String res = "";
+			try{
+				
+				String sql = "select message from History where receiver=?";
+				psmt = ct.prepareStatement(sql);
+				psmt.setString(1, "Public");
+				ResultSet rs = psmt.executeQuery();
+				while(rs.next()) {
+					res = res + rs.getString("message") + "\n";
+				}
+				rs.close();
+	            psmt.close();
+			}
+			catch(SQLException se){
+	            se.printStackTrace();
+	        }catch(Exception e){
+	            e.printStackTrace();
+	        }finally {
+	            try{
+	                if(psmt!=null) psmt.close();
+	            }catch(SQLException se2){
+	            }
+			
+	        }
+			return res;
 		}
 	
 	

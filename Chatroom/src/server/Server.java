@@ -119,12 +119,6 @@ public class Server {
 	}
 
 
-//	public void sendServerMessage(String message) {
-//		for (int i = clients.size() - 1; i >= 0; i--) {
-//			clients.get(i).getWriter().println("服务器：" + message + "(多人发送)");
-//			clients.get(i).getWriter().flush();
-//		}
-//	}
 
 
 }

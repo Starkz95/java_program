@@ -130,6 +130,15 @@ public class Client {
 				CCUI.getTextArea().setText(contentList.get(idx).toString());
 			}
 		});
+		
+		CCUI.getBtn_get().addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				 new HistoryUI(name,currentTabName);
+
+			}
+		});
 	}
 
 	/**
@@ -243,6 +252,10 @@ public class Client {
 	}
 	public ArrayList<StringBuffer> getContentList() {
 		return contentList;
+	}
+
+	public String getCurrentTabName() {
+		return currentTabName;
 	}
 	
 	

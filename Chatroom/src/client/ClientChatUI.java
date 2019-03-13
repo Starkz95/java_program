@@ -23,6 +23,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.DefaultCaret;
 
 public class ClientChatUI {
 
@@ -39,25 +40,31 @@ public class ClientChatUI {
 	private JPanel leftPanel;
 	private DefaultListModel listModel;
 	private JButton exitButton;
-	
+	private JButton btn_get;
 
 	public ClientChatUI() {
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setForeground(Color.blue);
+		DefaultCaret caret = (DefaultCaret)textArea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        
 		textField = new JTextField();
 		btn_send = new JButton("Send");
+		btn_get = new JButton("History");
 		listModel = new DefaultListModel();
 		userList = new JList(listModel);
 
 	    exitButton=new JButton("X");
 	    exitButton.setPreferredSize( new Dimension(20,20));
 		
-		leftScroll = new JScrollPane(textArea);
+	    
+		leftScroll = new JScrollPane(textArea);  
 		leftScroll.setBorder(new TitledBorder("Message"));
 		rightScroll = new JScrollPane(userList);
 		rightScroll.setBorder(new TitledBorder("Online user"));
 		southPanel = new JPanel(new BorderLayout());
+		southPanel.add(btn_get, BorderLayout.SOUTH);
 		southPanel.add(textField, BorderLayout.CENTER);
 		southPanel.add(btn_send, BorderLayout.EAST);
 		southPanel.setBorder(new TitledBorder("Send message"));
@@ -132,5 +139,11 @@ public class ClientChatUI {
 	public JButton getExitButton() {
 		return exitButton;
 	}
+
+	public JButton getBtn_get() {
+		return btn_get;
+	}
+	
+	
 	
 }

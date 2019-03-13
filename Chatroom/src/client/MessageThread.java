@@ -1,6 +1,8 @@
 package client;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JTextArea;
 
@@ -49,6 +51,7 @@ public class MessageThread extends Thread{
 	 */
 	public void run() {
 		String message = "";
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		while (true) {
 			try {
 				message = reader.readLine();
@@ -91,7 +94,7 @@ public class MessageThread extends Thread{
 					// String r = sp[2];// receiver
 					String c = sp[3];// message
 					// textArea.append("[public]" + s + ":\r\n" + c + "\r\n\r\n");
-					client.addMessage("Public", s + ":    " + c + "\r\n\r\n");
+					client.addMessage("Public", df.format(new Date()) +"\n"+ s + ":   " + c + "\r\n\r\n");
 					CCUI.getTabs().setSelectedIndex(CCUI.getTabs().indexOfTab("Public"));
 					System.out.println("[public]" + s + ": " + c + "\r\n");
 				} 
@@ -105,7 +108,7 @@ public class MessageThread extends Thread{
 					}
 					System.out.println("----");
 					String s2 = s.equals(client.getName()) ? r : s;
-					client.addMessage(s2, s + ":    " + c + "\r\n\r\n");
+					client.addMessage(s2, df.format(new Date()) +"\n"+ s + ":   " + c + "\r\n\r\n");
 					CCUI.getTabs().setSelectedIndex(CCUI.getTabs().indexOfTab(s2));
 					System.out.println("[Private]" + s + ": " + c + "\r\n");
 				}
