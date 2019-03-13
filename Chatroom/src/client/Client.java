@@ -204,7 +204,7 @@ public class Client {
 		}
 
 		if (i == CCUI.getTabs().getTabCount()) {
-			CCUI.getTabs().addTab(r, new JLabel("Chatting with" + r ));
+			CCUI.getTabs().addTab(r, new JLabel("Chatting with " + r ));
 			StringBuffer sb = new StringBuffer();
 			sb.append(msg);
 			contentList.add(sb);

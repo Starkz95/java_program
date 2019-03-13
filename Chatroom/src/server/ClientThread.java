@@ -40,7 +40,7 @@ public class ClientThread extends Thread{
 			}
 			userName = sp[1];
 			// send message to clients 
-			writer.println("Public@Server@ALL@" + userName + "successfully connecting to the server!");
+			writer.println("Public@Server@ALL@" + userName + " successfully connecting to the server!");
 			writer.flush();
 
 			// send message to client how many users are online
@@ -75,7 +75,7 @@ public class ClientThread extends Thread{
 				message = reader.readLine();
 				if (message.equals("Logout"))// when the user is logout
 				{
-					SUI.getContentArea().append(this.getUserName() + " 下线!\r\n");
+					SUI.getContentArea().append(this.getUserName() + " offline!\r\n");
 					reader.close();
 					writer.close();
 					socket.close();
