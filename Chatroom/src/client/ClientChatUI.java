@@ -2,6 +2,7 @@ package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -18,6 +19,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -41,10 +44,15 @@ public class ClientChatUI {
 	private DefaultListModel listModel;
 	private JButton exitButton;
 	private JButton btn_get;
+	private JButton profile;
 
-	public ClientChatUI() {
+	public ClientChatUI() throws Exception {
+		
+		//javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
 		textArea = new JTextArea();
 		textArea.setEditable(false);
+		textArea.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
 		textArea.setForeground(Color.blue);
 		DefaultCaret caret = (DefaultCaret)textArea.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -52,6 +60,7 @@ public class ClientChatUI {
 		textField = new JTextField();
 		btn_send = new JButton("Send");
 		btn_get = new JButton("History");
+		profile=new JButton("User's profile");
 		listModel = new DefaultListModel();
 		userList = new JList(listModel);
 
@@ -64,7 +73,8 @@ public class ClientChatUI {
 		rightScroll = new JScrollPane(userList);
 		rightScroll.setBorder(new TitledBorder("Online user"));
 		southPanel = new JPanel(new BorderLayout());
-		southPanel.add(btn_get, BorderLayout.SOUTH);
+		southPanel.add(btn_get, BorderLayout.WEST);
+		southPanel.add(profile,BorderLayout.SOUTH);
 		southPanel.add(textField, BorderLayout.CENTER);
 		southPanel.add(btn_send, BorderLayout.EAST);
 		southPanel.setBorder(new TitledBorder("Send message"));
@@ -82,7 +92,7 @@ public class ClientChatUI {
 		frame.setLayout(new BorderLayout());
 		frame.add(centerSplit, BorderLayout.CENTER);
 		frame.add(southPanel, BorderLayout.SOUTH);
-		frame.setSize(600, 400);
+		frame.setSize(600, 700);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
@@ -143,6 +153,12 @@ public class ClientChatUI {
 	public JButton getBtn_get() {
 		return btn_get;
 	}
+
+	public JButton getProfile() {
+		return profile;
+	}
+	
+	
 	
 	
 	

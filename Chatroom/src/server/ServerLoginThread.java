@@ -39,39 +39,49 @@ public class ServerLoginThread extends Thread {
             while(true) {
             	String message = in.readLine();
             
-            	String[] mess = message.split("@");
+            	String[] mess = message.split("#");
             	if(mess[0].equals("login")) {
-            		login = new DBHelper().checkUser(mess[1], mess[2]);
+            		if(mess.length==3) {
+            			login = new DBHelper().checkUser(mess[1], mess[2]);
 
-                	if (login) {
+            			if (login) {
                     //System.out.println(loginInfo[0] + "is online");
-                		out.println("1");
-        				ClientThread client = new ClientThread(socket,clients,SUI);
-        				client.start();// start the client thread for this user
-        				clients.add(client);
-        				SUI.getListModel().addElement(client.getUserName());// refresh the user list
-        				SUI.getContentArea().append(client.getUserName() + " is online!\r\n");
-        				break;
+            				out.println("1");
+            				ClientThread client = new ClientThread(socket,clients,SUI);
+            				client.start();// start the client thread for this user
+            				clients.add(client);
+            				SUI.getListModel().addElement(client.getUserName());// refresh the user list
+            				SUI.getContentArea().append(client.getUserName() + " is online!\r\n");
+            				break;
                 	
-                	}else {
-                		out.println("0");
-                	}
+            			}else {
+            				out.println("0");
+            			}
+            		}
+            		else {
+            			out.println("2");
+            		}
             	}else if(mess[0].equals("register")){
-            		register = new DBHelper().checknewUser(mess[1]);
+            		if(mess.length==8) {
+            			register = new DBHelper().checknewUser(mess[1]);
 
-                	if (!register) {
+            			if (!register) {
                     //System.out.println(loginInfo[0] + "is online");
-                		if(mess[2].equals(mess[3]) && !mess[2].equals(null) && !mess[3].equals(null)) {
-                			out.println("1");
-                    		new DBHelper().insertUser(mess[1], mess[2]);
-                		}
-                		else {
-                			out.println("2");
-                		}
+            				if(mess[2].equals(mess[3])) {
+            					out.println("1");
+            					new DBHelper().insertUser(mess[1], mess[2], mess[4], mess[5], mess[6], mess[7]);
+            				}
+            				else {
+            					out.println("2");
+            				}
 
-                	}else {
-                		out.println("3");
-                	}
+            			}else {
+            				out.println("3");
+            			}
+            	  }
+            		else {
+            			out.println("4");
+            		}
             	}
             	
             //TODO connect to the database

@@ -1,5 +1,6 @@
 package client;
 import java.awt.BorderLayout;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,6 +21,7 @@ public class HistoryUI {
 	 public HistoryUI(String name,String currentTabName){
 		 	textArea = new JTextArea();
 			textArea.setEditable(false);
+			textArea.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
 			scrollPane = new JScrollPane(textArea);
 			scrollPane.setBorder(new TitledBorder("History"));
 			
@@ -37,6 +39,7 @@ public class HistoryUI {
 		    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		    frame.setLayout(new BorderLayout());
 			frame.add(scrollPane, BorderLayout.CENTER);
+			frame.setLocationRelativeTo(null);
 	        frame.setVisible(true);
 	 }
 	 

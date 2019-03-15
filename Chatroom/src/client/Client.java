@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -26,6 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -69,8 +72,9 @@ public class Client {
 	 * @param port      
 	 * @param nickName
 	 *           
-0	 */
-	public Client(Socket socket, String nickName) {
+0	 
+	 * @throws Exception */
+	public Client(Socket socket, String nickName) throws Exception {
 		this.CCUI=new ClientChatUI();
 		contentList.add(new StringBuffer());
 		// connect to server
@@ -136,6 +140,26 @@ public class Client {
 			public void actionPerformed(ActionEvent e) {
 				
 				 new HistoryUI(name,currentTabName);
+
+			}
+		});
+		
+		CCUI.getProfile().addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				 try {
+					 if(!currentTabName.equals("Public")) {
+						 new UserProfileUI(currentTabName);
+					 }
+					 else {
+						 JOptionPane.setDefaultLocale(Locale.ENGLISH);
+					    JOptionPane.showMessageDialog(null, "Please select a user!", "",JOptionPane.ERROR_MESSAGE);
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 			}
 		});

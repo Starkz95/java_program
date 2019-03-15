@@ -174,16 +174,20 @@ public class DBHelper {
 		 * @param username
 		 * @param password
 		 */
-		public void insertUser(String username,String password) {
+		public void insertUser(String username,String password,String sex,String email,String age,String address) {
 			
 			
 			PreparedStatement psmt = null;
 			try{
 				
-				String sql = "insert into QQuser (username,password) values(?, ?)";
+				String sql = "insert into QQuser (username,password,sex,email,age,address) values(?, ?, ?, ?, ?, ?)";
 				psmt = ct.prepareStatement(sql);
 				psmt.setString(1, username);
 				psmt.setString(2, password);
+				psmt.setString(3, sex);
+				psmt.setString(4, email);
+				psmt.setString(5, age);
+				psmt.setString(6, address);
 				psmt.execute();
 				
 			}
@@ -203,6 +207,13 @@ public class DBHelper {
 		}
 		}
 		
+		/**
+		 * insert messages in history table
+		 * @param Sender
+		 * @param Receiver
+		 * @param Message
+		 * @param date
+		 */
 		public void insertHistory(String Sender,String Receiver, String Message,String date) {
 			
 			
@@ -234,7 +245,13 @@ public class DBHelper {
 			
 		}
 		}
-		
+	
+		/**
+		 * select private chat history of two users
+		 * @param Sender
+		 * @param Receiver
+		 * @return
+		 */
 		public  String  getPrivateHistory(String Sender, String Receiver)
 		{
 			PreparedStatement psmt = null;
@@ -268,6 +285,10 @@ public class DBHelper {
 			return res;
 		}
 		
+		/**
+		 * select chat history of public
+		 * @return
+		 */
 		public  String  getPublicHistory()
 		{
 			PreparedStatement psmt = null;
@@ -296,6 +317,28 @@ public class DBHelper {
 			
 	        }
 			return res;
+		}
+		
+		/**
+		 * select a user's profile
+		 * @param currentName
+		 * @return
+		 */
+		public ResultSet userProfile(String currentName)
+		{
+			ResultSet result=null;
+			PreparedStatement psmt = null;
+			try {
+				String sql = "select * from QQuser where username=?";
+				psmt = ct.prepareStatement(sql);
+				psmt.setString(1, currentName);
+				result = psmt.executeQuery();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return result;
 		}
 	
 	

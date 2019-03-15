@@ -14,8 +14,10 @@ public class ClientLoginUI {
     private JButton loginButton = new JButton("login");
     private JButton registerButton = new JButton("register");
 
-    public ClientLoginUI() {
-        frame.setSize(350, 200);
+    public ClientLoginUI() throws Exception {
+    	//javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+    	//org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+        frame.setSize(400, 300);
         panel.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
@@ -24,18 +26,19 @@ public class ClientLoginUI {
         frame.setVisible(true);
     }
 
-    public void init() {
+    public void init() throws Exception {
+    	
         userLabel.setBounds(10, 20, 80, 25);
         panel.add(userLabel);
         userText.setBounds(100, 20, 165, 25);
         panel.add(userText);
-        passwordLabel.setBounds(10, 50, 80, 25);
+        passwordLabel.setBounds(10, 70, 80, 25);
         panel.add(passwordLabel);
-        passwordText.setBounds(100, 50, 165, 25);
+        passwordText.setBounds(100, 70, 165, 25);
         panel.add(passwordText);
-        loginButton.setBounds(60, 80, 80, 25);
+        loginButton.setBounds(60, 120, 80, 25);
         panel.add(loginButton);
-        registerButton.setBounds(200, 80, 100, 25);
+        registerButton.setBounds(200, 120, 100, 25);
         panel.add(registerButton);
     }
 
@@ -46,7 +49,13 @@ public class ClientLoginUI {
 
     public void loginFailed() {
     	JOptionPane.setDefaultLocale(Locale.ENGLISH);
-    	JOptionPane.showMessageDialog(null, "account or password wrong!", "",JOptionPane.ERROR_MESSAGE);
+    	JOptionPane.showMessageDialog(null, "account or password is wrong!", "",JOptionPane.ERROR_MESSAGE);
+        
+    }
+    
+    public void notnull() {
+    	JOptionPane.setDefaultLocale(Locale.ENGLISH);
+    	JOptionPane.showMessageDialog(null, "account or password can't be null!", "",JOptionPane.ERROR_MESSAGE);
         
     }
     
