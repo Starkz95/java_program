@@ -3,15 +3,20 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.DefaultListModel;
+import javax.swing.GrayFilter;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -45,12 +50,16 @@ public class ClientChatUI {
 	private JButton exitButton;
 	private JButton btn_get;
 	private JButton profile;
+	private ImageIcon img;
 
 	public ClientChatUI() throws Exception {
 		
 		//javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 		org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+		img=new ImageIcon("chatting.png");
 		textArea = new JTextArea();
+
+		textArea.setOpaque(false);
 		textArea.setEditable(false);
 		textArea.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
 		textArea.setForeground(Color.blue);
@@ -67,9 +76,10 @@ public class ClientChatUI {
 	    exitButton=new JButton("X");
 	    exitButton.setPreferredSize( new Dimension(20,20));
 		
-	    
-		leftScroll = new JScrollPane(textArea);  
+		leftScroll = new JScrollPane(textArea);
 		leftScroll.setBorder(new TitledBorder("Message"));
+		leftScroll.setOpaque(false);
+		leftScroll.getViewport().setOpaque(false);
 		rightScroll = new JScrollPane(userList);
 		rightScroll.setBorder(new TitledBorder("Online user"));
 		southPanel = new JPanel(new BorderLayout());
@@ -81,7 +91,17 @@ public class ClientChatUI {
 
 		tabs = new JTabbedPane();
 		tabs.addTab("Public", new JLabel("Public chat"));
-		leftPanel = new JPanel(new BorderLayout());
+		leftPanel = new JPanel(new BorderLayout()){
+
+            {
+                setOpaque(false);
+            } // instance initializer
+
+            public void paintComponent(Graphics g) {
+                g.drawImage(img.getImage(), 65, 175, this);
+                super.paintComponent(g);
+            }
+        };
 		leftPanel.add(tabs, BorderLayout.NORTH);
 		leftPanel.add(leftScroll, BorderLayout.CENTER);
 

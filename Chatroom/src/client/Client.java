@@ -135,6 +135,7 @@ public class Client {
 			}
 		});
 		
+		//get chatting history
 		CCUI.getBtn_get().addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
@@ -144,21 +145,22 @@ public class Client {
 			}
 		});
 		
+		//get user's profile
 		CCUI.getProfile().addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				
-				 try {
-					 if(!currentTabName.equals("Public")) {
-						 new UserProfileUI(currentTabName);
-					 }
-					 else {
-						 JOptionPane.setDefaultLocale(Locale.ENGLISH);
-					    JOptionPane.showMessageDialog(null, "Please select a user!", "",JOptionPane.ERROR_MESSAGE);
+				 if(!currentTabName.equals("Public")) {
+					try {
+						new UserProfileUI(currentTabName);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				 }
+				 else {
+					 JOptionPane.setDefaultLocale(Locale.ENGLISH);
+				    JOptionPane.showMessageDialog(null, "Please select a user!", "",JOptionPane.ERROR_MESSAGE);
 				}
 
 			}

@@ -99,7 +99,8 @@ public class ClientThread extends Thread{
 							return;
 						}
 					}
-				} else {
+				}
+				else {
 					dispatcherMessage(message);
 				}
 			} catch (IOException e) {
@@ -143,6 +144,7 @@ public class ClientThread extends Thread{
 			}
 		}
 	}
+	
 
 	public Socket getSocket() {
 		return socket;

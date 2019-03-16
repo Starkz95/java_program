@@ -13,11 +13,13 @@ public class ClientLoginUI {
     private JPasswordField passwordText = new JPasswordField();
     private JButton loginButton = new JButton("login");
     private JButton registerButton = new JButton("register");
+    private JLabel background;
+    private ImageIcon img = new ImageIcon("chatroom.png");
 
     public ClientLoginUI() throws Exception {
     	//javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
     	//org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
-        frame.setSize(400, 300);
+        frame.setSize(400, 400);
         panel.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
@@ -28,17 +30,20 @@ public class ClientLoginUI {
 
     public void init() throws Exception {
     	
-        userLabel.setBounds(10, 20, 80, 25);
+    	background=new JLabel(img);
+    	background.setBounds(140, 10, img.getIconWidth(), img.getIconHeight());
+    	panel.add(background);
+        userLabel.setBounds(10, 100, 80, 25);
         panel.add(userLabel);
-        userText.setBounds(100, 20, 165, 25);
+        userText.setBounds(100, 100, 165, 25);
         panel.add(userText);
-        passwordLabel.setBounds(10, 70, 80, 25);
+        passwordLabel.setBounds(10, 150, 80, 25);
         panel.add(passwordLabel);
-        passwordText.setBounds(100, 70, 165, 25);
+        passwordText.setBounds(100, 150, 165, 25);
         panel.add(passwordText);
-        loginButton.setBounds(60, 120, 80, 25);
+        loginButton.setBounds(60, 200, 80, 25);
         panel.add(loginButton);
-        registerButton.setBounds(200, 120, 100, 25);
+        registerButton.setBounds(200, 200, 100, 25);
         panel.add(registerButton);
     }
 

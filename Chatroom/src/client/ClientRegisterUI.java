@@ -28,7 +28,7 @@ public class ClientRegisterUI {
 	
 
     public ClientRegisterUI() {
-        frame.setSize(480, 380);
+        frame.setSize(420, 380);
         panel.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(panel);
