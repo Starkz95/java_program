@@ -295,7 +295,7 @@ public class DBHelper {
 			String res = "";
 			try{
 				
-				String sql = "select message from History where receiver=?";
+				String sql = "select message from History where receiver=? order by date asc";
 				psmt = ct.prepareStatement(sql);
 				psmt.setString(1, "Public");
 				ResultSet rs = psmt.executeQuery();

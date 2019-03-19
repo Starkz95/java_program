@@ -19,7 +19,6 @@ import server.DBHelper;
 
 public class UserProfileUI {
 	 private JFrame frame = new JFrame("User's profile");
-     private DBHelper userProfile;
      private JPanel panel = new JPanel();
      private JLabel userLabel = new JLabel("Username:");
      private JLabel user = new JLabel();
@@ -29,20 +28,11 @@ public class UserProfileUI {
  	private JLabel age = new JLabel();
  	private JLabel emailLabel = new JLabel("Email:");
  	private JLabel email = new JLabel();
- 	private JLabel addressLebel = new JLabel("Address:");
+ 	private JLabel addressLabel = new JLabel("Address:");
  	private JLabel address = new JLabel();  
      
-	 public UserProfileUI(String currentTabName) throws SQLException{
+	 public UserProfileUI(){
 			
-		 	userProfile = new DBHelper();
-		    ResultSet rs=userProfile.userProfile(currentTabName);
-		    if(rs.next()) {
-		    	user.setText(rs.getString("username"));
-		    	sex.setText(rs.getString("sex"));
-		    	age.setText(rs.getString("age"));
-		    	email.setText(rs.getString("email"));
-		    	address.setText(rs.getString("address"));
-		    }
 			 frame.setSize(350, 380);
 		     panel.setLayout(null);
 		     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -69,10 +59,34 @@ public class UserProfileUI {
 	        panel.add(emailLabel);
 	        email.setBounds(150,110,165,25);
 	        panel.add(email);
-	        addressLebel.setBounds(10,140,80,25);
-	        panel.add(addressLebel);
+	        addressLabel.setBounds(10,140,80,25);
+	        panel.add(addressLabel);
 	        address.setBounds(150,140,165,25);
 	        panel.add(address);
 	        
 	    }
+
+	public JLabel getUser() {
+		return user;
+	}
+
+	public JLabel getSex() {
+		return sex;
+	}
+
+	public JLabel getAge() {
+		return age;
+	}
+
+	public JLabel getEmail() {
+		return email;
+	}
+
+	public JLabel getAddress() {
+		return address;
+	}
+	  
+	  
+	  
+	  
 }

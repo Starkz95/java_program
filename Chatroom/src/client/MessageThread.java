@@ -112,6 +112,19 @@ public class MessageThread extends Thread{
 					CCUI.getTabs().setSelectedIndex(CCUI.getTabs().indexOfTab(s2));
 					System.out.println("[Private]" + s + ": " + c + "\r\n");
 				}
+				else if(message.split("#")[0].equals("Profile")) {
+					String[] profile = message.split("#");
+					UserProfileUI UPUI=new UserProfileUI();
+					UPUI.getUser().setText(profile[1]);
+					UPUI.getSex().setText(profile[2]);
+					UPUI.getAge().setText(profile[3]);
+					UPUI.getEmail().setText(profile[4]);
+					UPUI.getAddress().setText(profile[5]);
+				}
+//				else if(sp[0].equals("History")) {
+//					HistoryUI HUI=new HistoryUI();
+//					HUI.getTextArea().setText(sp[1]);
+//				}
 
 			} catch (IOException e) {
 				e.printStackTrace();

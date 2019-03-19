@@ -141,7 +141,7 @@ public class Client {
 			public void actionPerformed(ActionEvent e) {
 				
 				 new HistoryUI(name,currentTabName);
-
+			
 			}
 		});
 		
@@ -151,12 +151,9 @@ public class Client {
 			public void actionPerformed(ActionEvent e) {
 				
 				 if(!currentTabName.equals("Public")) {
-					try {
-						new UserProfileUI(currentTabName);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					//new UserProfileUI(currentTabName);
+					writer.println("Profile@"+currentTabName);
+					writer.flush();
 				 }
 				 else {
 					 JOptionPane.setDefaultLocale(Locale.ENGLISH);
@@ -239,7 +236,10 @@ public class Client {
 		}
 
 		if (i == CCUI.getTabs().getTabCount()) {
-			CCUI.getTabs().addTab(r, new JLabel("Chatting with " + r ));
+			JLabel tips = new JLabel("Chatting with " + r);  
+			tips.setOpaque(true);
+			tips.setBackground(new Color(0,250,154)); 
+			CCUI.getTabs().addTab(r, tips);
 			StringBuffer sb = new StringBuffer();
 			sb.append(msg);
 			contentList.add(sb);

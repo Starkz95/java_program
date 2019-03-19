@@ -72,6 +72,12 @@ public class ClientChatUI {
 		profile=new JButton("User's profile");
 		listModel = new DefaultListModel();
 		userList = new JList(listModel);
+		btn_get.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
+		btn_get.setForeground(new Color(46,139,87));
+		btn_send.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
+		btn_send.setForeground(new Color(255,215,0));
+		profile.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
+		profile.setForeground(new Color(199,21,133));
 
 	    exitButton=new JButton("X");
 	    exitButton.setPreferredSize( new Dimension(20,20));
@@ -90,7 +96,10 @@ public class ClientChatUI {
 		southPanel.setBorder(new TitledBorder("Send message"));
 
 		tabs = new JTabbedPane();
-		tabs.addTab("Public", new JLabel("Public chat"));
+		JLabel tips = new JLabel("Public chat");  
+		tips.setOpaque(true);
+		tips.setBackground(new Color(0,250,154));
+		tabs.addTab("Public", tips);
 		leftPanel = new JPanel(new BorderLayout()){
 
             {

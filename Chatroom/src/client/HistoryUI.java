@@ -13,10 +13,10 @@ import server.DBHelper;
 
 public class HistoryUI {
 	 private JFrame frame = new JFrame("History");
-     private DBHelper history;
 	 private JTextArea textArea;
 	 private JScrollPane scrollPane;
-	 private JPanel panel = new JPanel();    
+	 private JPanel panel = new JPanel();   
+	 private DBHelper history;
      
 	 public HistoryUI(String name,String currentTabName){
 		 	textArea = new JTextArea();
@@ -24,8 +24,7 @@ public class HistoryUI {
 			textArea.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
 			scrollPane = new JScrollPane(textArea);
 			scrollPane.setBorder(new TitledBorder("History"));
-			
-			history = new DBHelper();
+			history=new DBHelper();
 		    
 		 	frame.setSize(600, 400);
 		    panel.setLayout(null);
@@ -42,6 +41,12 @@ public class HistoryUI {
 			frame.setLocationRelativeTo(null);
 	        frame.setVisible(true);
 	 }
+
+	public JTextArea getTextArea() {
+		return textArea;
+	}
+	 
+	 
 	 
 	
 }

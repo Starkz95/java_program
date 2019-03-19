@@ -1,5 +1,7 @@
 package client;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.Locale;
 
 import javax.swing.*;
@@ -73,6 +75,10 @@ public class ClientRegisterUI {
         registerButton.setBounds(200, 240, 100, 25);
         panel.add(registerButton);
         sexString="";
+        cancelButton.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
+        cancelButton.setForeground(new Color(220,20,60));
+        registerButton.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
+        registerButton.setForeground(new Color(72,61,139));
         
     }
 

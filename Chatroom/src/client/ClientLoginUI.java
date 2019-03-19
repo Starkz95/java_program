@@ -1,5 +1,7 @@
 package client;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.Locale;
 
 import javax.swing.*;
@@ -7,12 +9,12 @@ import javax.swing.*;
 public class ClientLoginUI {
     private JFrame frame = new JFrame("Login Interface");
     private JPanel panel = new JPanel();
-    private JLabel userLabel = new JLabel("username:");
+    private JLabel userLabel = new JLabel("Username:");
     private JTextField userText = new JTextField();
-    private JLabel passwordLabel = new JLabel("password:");
+    private JLabel passwordLabel = new JLabel("Password:");
     private JPasswordField passwordText = new JPasswordField();
-    private JButton loginButton = new JButton("login");
-    private JButton registerButton = new JButton("register");
+    private JButton loginButton = new JButton("Login");
+    private JButton registerButton = new JButton("Register");
     private JLabel background;
     private ImageIcon img = new ImageIcon("chatroom.png");
 
@@ -45,6 +47,10 @@ public class ClientLoginUI {
         panel.add(loginButton);
         registerButton.setBounds(200, 200, 100, 25);
         panel.add(registerButton);
+        loginButton.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
+        loginButton.setForeground(new Color(123,104,238));
+        registerButton.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
+        registerButton.setForeground(new Color(255,140,0));
     }
 
     public void successfulLogin() {

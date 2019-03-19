@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,6 +77,7 @@ public class ClientThread extends Thread{
 		while (true) {
 			try {
 				message = reader.readLine();
+				String[] s=message.split("@");
 				if (message.equals("Logout"))// when the user is logout
 				{
 					SUI.getContentArea().append(this.getUserName() + " offline!\r\n");
@@ -100,11 +103,53 @@ public class ClientThread extends Thread{
 						}
 					}
 				}
+				else if(s[0].equals("Profile")) {
+					ResultSet rs=new DBHelper().userProfile(s[1]);
+					if(rs.next()) {
+						String	user=rs.getString("username");
+						String	sex=rs.getString("sex");
+						String	age=rs.getString("age");
+						String	email=rs.getString("email");
+						String	address=rs.getString("address");
+						String profile="Profile#"+user+"#"+sex+"#"+age+"#"+email+"#"+address;
+					
+						for (int i = clients.size() - 1; i >= 0; i--) {
+							if (clients.get(i).getUserName().equals(userName)) {
+								clients.get(i).getWriter().println(profile);
+								clients.get(i).getWriter().flush();
+							}
+						}
+					}
+					
+				}
+//				else if(s[0].equals("History")) {
+//					if(s.length==2) {
+//						String history=new DBHelper().getPublicHistory();
+//						for (int i = clients.size() - 1; i >= 0; i--) {
+//							if (clients.get(i).getUserName().equals(userName)) {
+//								clients.get(i).getWriter().println("History@"+history);
+//								clients.get(i).getWriter().flush();
+//							}
+//						}
+//					}
+//					else {
+//						String history=new DBHelper().getPrivateHistory(s[1], s[2]);
+//						for (int i = clients.size() - 1; i >= 0; i--) {
+//							if (clients.get(i).getUserName().equals(userName)) {
+//								clients.get(i).getWriter().println("History@"+history);
+//								clients.get(i).getWriter().flush();
+//							}
+//						}
+//					}
+//				}
 				else {
 					dispatcherMessage(message);
 				}
 			} catch (IOException e) {
 				// e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
