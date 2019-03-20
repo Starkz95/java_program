@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -63,7 +62,7 @@ public class ServerLoginThread extends Thread {
             		}
             	}else if(mess[0].equals("register")){
             		if(mess.length==8) {
-            			register = new DBHelper().checknewUser(mess[1]);
+            			register = new DBHelper().checkNewUser(mess[1]);
 
             			if (!register) {
                     //System.out.println(loginInfo[0] + "is online");

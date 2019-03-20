@@ -3,14 +3,12 @@ package server;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -21,104 +19,110 @@ import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
 public class Server {
-	
-	private ServerUI SUI;
-	private ServerSocket serverSocket;
-	private ServerThread serverThread;
-	private ArrayList<ClientThread> clients;
 
-	private boolean isStart = false;
+    private ServerUI SUI;
+    private ServerSocket serverSocket;
+    private ServerThread serverThread;
+    private ArrayList<ClientThread> clients;
 
-	public static void main(String[] args) throws IOException {
-		if (args.length == 1) {
-			int port = Integer.parseInt(args[0]);
-			new Server(port);
-		} else {
-			new Server(8000);
-		}
-	}
+    private boolean isStart = false;
 
-	/**
-	 * constructor
-	 * @param port
-	 */
-	public Server(int port) {
+    public static void main(String[] args) throws IOException {
+//		if (args.length == 1) {
+//			int port = Integer.parseInt(args[0]);
+//			new Server(port);
+//		} else {
+        try (FileInputStream input = new FileInputStream("ServerINFO.properties")) {
+            Properties properties = new Properties();
+            properties.load(input);
+            int port = Integer.parseInt(properties.getProperty("port"));
+            new Server(port);
+        }
 
-		this.SUI=new ServerUI();
+//		}
+    }
 
-		try {
-			serverStart(port);
-			SUI.getContentArea().append("The server is running, port: " + port + "\r\n");
-		} catch (BindException e1) {
-			System.err.println("The server failed to start, port occupied!");
-			System.exit(-1);
-		}
+    /**
+     * constructor
+     *
+     * @param port
+     */
+    public Server(int port) {
 
-		// close the window
-		SUI.getFrame().addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				if (isStart) {
-					closeServer();
-				}
-				System.exit(0);
-			}
-		});
+        this.SUI = new ServerUI();
 
-	}
+        try {
+            serverStart(port);
+            SUI.getContentArea().append("The server is running, port: " + port + "\r\n");
+        } catch (BindException e1) {
+            System.err.println("The server failed to start, port occupied!");
+            System.exit(-1);
+        }
 
-	/**
-	 * start the connection to the clients
-	 * @param port
-	 * @throws java.net.BindException
-	 */
-	public void serverStart(int port) throws java.net.BindException {
-		try {
-			clients = new ArrayList<ClientThread>();
-			serverSocket = new ServerSocket(port);
-			serverThread = new ServerThread(serverSocket,clients,SUI);
-			serverThread.start();
-			isStart = true;
-		} catch (BindException e) {
-			isStart = false;
-			throw new BindException("The port is already occupied, please change the other one!");
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			isStart = false;
-			throw new BindException("Exception for starting the server!");
-		}
-	}
+        // close the window
+        SUI.getFrame().addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                if (isStart) {
+                    closeServer();
+                }
+                System.exit(0);
+            }
+        });
 
-	/**
-	 * close connection with the clients
-	 */
-	public void closeServer() {
-		try {
-			if (serverThread != null)
-				serverThread.stop();// stop the thread for server
+    }
 
-			for (int i = clients.size() - 1; i >= 0; i--) {
-				//send "CLOSE" message to all clients
-				clients.get(i).getWriter().println("CLOSE");
-				clients.get(i).getWriter().flush();
-				
-				clients.get(i).stop();// stop the clientthread
-				clients.get(i).getReader().close();
-				clients.get(i).getWriter().close();
-				clients.get(i).getSocket().close();
-				clients.remove(i);
-			}
-			if (serverSocket != null) {
-				serverSocket.close();
-			}
-			SUI.getListModel().removeAllElements();
-			isStart = false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			isStart = true;
-		}
-	}
+    /**
+     * start the connection to the clients
+     *
+     * @param port
+     * @throws java.net.BindException
+     */
+    public void serverStart(int port) throws java.net.BindException {
+        try {
+            clients = new ArrayList<ClientThread>();
+            serverSocket = new ServerSocket(port);
+            serverThread = new ServerThread(serverSocket, clients, SUI);
+            serverThread.start();
+            isStart = true;
+        } catch (BindException e) {
+            isStart = false;
+            throw new BindException("The port is already occupied, please change the other one!");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            isStart = false;
+            throw new BindException("Exception for starting the server!");
+        }
+    }
 
+    /**
+     * close connection with the clients
+     */
+    public void closeServer() {
+        try {
+            if (serverThread != null)
+                serverThread.stop();// stop the thread for server
 
+            for (int i = clients.size() - 1; i >= 0; i--) {
+                //send "CLOSE" message to all clients
+                clients.get(i).getWriter().println("CLOSE");
+                clients.get(i).getWriter().flush();
+
+                clients.get(i).stop();// stop the clientthread
+                clients.get(i).getReader().close();
+                clients.get(i).getWriter().close();
+                clients.get(i).getSocket().close();
+                clients.remove(i);
+            }
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
+            SUI.getListModel().removeAllElements();
+            isStart = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            isStart = true;
+        }
+    }
 
 
 }

@@ -4,19 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.DefaultListModel;
-import javax.swing.GrayFilter;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,29 +17,29 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.DefaultCaret;
 
 public class ClientChatUI {
 
 	private JFrame frame;
 	private JList userList;
+	private JList groupList;
 	private JTextArea textArea;
 	private JTextField textField;
 	private JButton btn_send;
 	private JPanel southPanel;
-	private JScrollPane rightScroll;
+	private JPanel rightDownPane;
+	private JScrollPane rightUpScroll;
+	private JScrollPane rightDownScroll;
 	private JScrollPane leftScroll;
 	private JSplitPane centerSplit;
+	private JSplitPane rightSplit;
 	private JTabbedPane tabs;
 	private JPanel leftPanel;
-	private DefaultListModel listModel;
+	private DefaultListModel userListModel;
+	private DefaultListModel groupListModel;
+	private JButton newGroupChatButton;
 	private JButton exitButton;
 	private JButton btn_get;
 	private JButton profile;
@@ -69,9 +62,12 @@ public class ClientChatUI {
 		textField = new JTextField();
 		btn_send = new JButton("Send");
 		btn_get = new JButton("History");
+		newGroupChatButton = new JButton("Creat a new Group");
 		profile=new JButton("User's profile");
-		listModel = new DefaultListModel();
-		userList = new JList(listModel);
+		userListModel = new DefaultListModel();
+		userList = new JList(userListModel);
+		groupListModel = new DefaultListModel();
+		groupList = new JList(groupListModel);
 		btn_get.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
 		btn_get.setForeground(new Color(46,139,87));
 		btn_send.setFont(new Font("FontAttrib.BOLD",Font.BOLD,15));
@@ -86,8 +82,15 @@ public class ClientChatUI {
 		leftScroll.setBorder(new TitledBorder("Message"));
 		leftScroll.setOpaque(false);
 		leftScroll.getViewport().setOpaque(false);
-		rightScroll = new JScrollPane(userList);
-		rightScroll.setBorder(new TitledBorder("Online user"));
+		rightUpScroll = new JScrollPane(userList);
+		rightUpScroll.setBorder(new TitledBorder("Online user"));
+		rightDownScroll = new JScrollPane(groupList);
+		rightDownScroll.setBorder(new TitledBorder("Joined Groups"));
+
+		rightDownPane = new JPanel(new BorderLayout());
+		rightDownPane.add(newGroupChatButton,BorderLayout.NORTH);
+		rightDownPane.add(rightDownScroll,BorderLayout.CENTER);
+
 		southPanel = new JPanel(new BorderLayout());
 		southPanel.add(btn_get, BorderLayout.WEST);
 		southPanel.add(profile,BorderLayout.SOUTH);
@@ -114,14 +117,17 @@ public class ClientChatUI {
 		leftPanel.add(tabs, BorderLayout.NORTH);
 		leftPanel.add(leftScroll, BorderLayout.CENTER);
 
-		centerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightScroll);
+		rightSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, rightUpScroll,rightDownPane);
+		rightSplit.setDividerLocation(300);
+
+		centerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightSplit);
 		centerSplit.setDividerLocation(400);
 
 		frame = new JFrame("Client");
 		frame.setLayout(new BorderLayout());
 		frame.add(centerSplit, BorderLayout.CENTER);
 		frame.add(southPanel, BorderLayout.SOUTH);
-		frame.setSize(600, 700);
+		frame.setSize(650, 750);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
@@ -151,8 +157,8 @@ public class ClientChatUI {
 		return southPanel;
 	}
 
-	public JScrollPane getRightScroll() {
-		return rightScroll;
+	public JScrollPane getRightUpScroll() {
+		return rightUpScroll;
 	}
 
 	public JScrollPane getLeftScroll() {
@@ -171,8 +177,8 @@ public class ClientChatUI {
 		return leftPanel;
 	}
 
-	public DefaultListModel getListModel() {
-		return listModel;
+	public DefaultListModel getUserListModel() {
+		return userListModel;
 	}
 	
 	public JButton getExitButton() {
@@ -186,9 +192,16 @@ public class ClientChatUI {
 	public JButton getProfile() {
 		return profile;
 	}
-	
-	
-	
-	
-	
+
+	public DefaultListModel getGroupListModel() {
+		return groupListModel;
+	}
+
+	public JList getGroupList() {
+		return groupList;
+	}
+
+	public JButton getNewGroupChatButton() {
+		return newGroupChatButton;
+	}
 }

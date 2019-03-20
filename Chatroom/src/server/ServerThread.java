@@ -33,7 +33,7 @@ public class ServerThread extends Thread{
 //				ClientThread client = new ClientThread(socket,clients,SUI);
 //				client.start();// start the client thread for this user
 //				clients.add(client);
-//				SUI.getListModel().addElement(client.getUserName());// refresh the user list
+//				SUI.getUserListModel().addElement(client.getUserName());// refresh the user list
 //				SUI.getContentArea().append(client.getUserName() + " is online!\r\n");
 			} catch (IOException e) {
 				e.printStackTrace();
